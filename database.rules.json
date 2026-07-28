@@ -1,0 +1,44 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "admins": {
+      "$adminUid": {
+        ".read": "auth != null && (auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists() || (auth.token.email != null && auth.token.email.matches(/.*admin.*/i)))",
+        ".write": false
+      }
+    },
+    "team_members": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('role').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('role').val() === 'accountant')"
+    },
+    "team_index": {
+      "$email": {
+        ".read": "auth != null && (auth.token.email === $email || root.child('users').child(auth.uid).child('profile').child('email').val() === $email || root.child('users').child(auth.uid).child('profile').child('role').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('role').val() === 'accountant')",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('role').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('role').val() === 'accountant')"
+      }
+    },
+    "users": {
+      ".read": "auth != null && (auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists() || (auth.token.email != null && auth.token.email.matches(/.*admin.*/i)))",
+      ".write": "auth != null && (auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists() || (auth.token.email != null && auth.token.email.matches(/.*admin.*/i)))",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('team_index').child(auth.token.email).val() === $uid || auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists() || (auth.token.email != null && auth.token.email.matches(/.*admin.*/i)))",
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child($uid).child('profile').child('parentUid').val() === auth.uid || auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists() || (auth.token.email != null && auth.token.email.matches(/.*admin.*/i)))",
+        "profile": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('users').child($uid).child('profile').child('parentUid').val() === auth.uid || auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists() || (auth.token.email != null && auth.token.email.matches(/.*admin.*/i)))",
+          ".write": "auth != null && (auth.uid === $uid || root.child('users').child($uid).child('profile').child('parentUid').val() === auth.uid || auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists() || (auth.token.email != null && auth.token.email.matches(/.*admin.*/i)))"
+        },
+        "team": {
+          "$teamUid": {
+            ".read": "auth != null && (auth.uid === $teamUid || auth.uid === $uid || data.child('profile').child('parentUid').val() === auth.uid || auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists())",
+            ".write": "auth != null && (auth.uid === $uid || root.child('users').child($uid).child('profile').child('role').val() === 'admin' || (root.child('users').child($uid).child('profile').child('role').val() === 'accountant' && data.child('profile').child('parentUid').val() === auth.uid) || auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists())",
+            "profile": {
+              ".read": "auth != null && (auth.uid === $teamUid || auth.uid === $uid || data.child('parentUid').val() === auth.uid || auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists())",
+              ".write": "auth != null && (auth.uid === $teamUid || auth.uid === $uid || data.child('parentUid').val() === auth.uid || auth.uid === 'n4KBfNzDe3hkkA4FyzfUw9uPycF3' || root.child('admins').child(auth.uid).exists())"
+            }
+          }
+        }
+      }
+    }
+  }
+}
